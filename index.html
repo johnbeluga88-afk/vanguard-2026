@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VANGUARD 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="app">
+    <header class="app-header">
+      <h1>VANGUARD 2026</h1>
+      <nav class="main-nav">
+        <button data-view="levels" class="nav-btn active">LEVELS</button>
+        <button data-view="garage" class="nav-btn">GARAGE</button>
+        <button data-view="import" class="nav-btn">IMPORT & LDR</button>
+        <button data-view="launch" class="nav-btn">LAUNCH LEVEL</button>
+        <button data-view="studio" class="nav-btn">OPEN STUDIO</button>
+      </nav>
+    </header>
+
+    <main class="app-main">
+
+      <!-- LEVELS -->
+      <section id="view-levels" class="view active">
+        <h2>Levels</h2>
+        <div id="levels-list" class="card-list"></div>
+      </section>
+
+      <!-- GARAGE -->
+      <section id="view-garage" class="view">
+        <h2>Garage</h2>
+        <div class="garage-grid">
+          <div>
+            <h3>Icons</h3>
+            <div id="icon-list" class="card-list small"></div>
+          </div>
+          <div>
+            <h3>Faces</h3>
+            <div id="face-list" class="card-list small"></div>
+          </div>
+        </div>
+        <canvas id="garage-preview" width="120" height="120"></canvas>
+      </section>
+
+      <!-- IMPORT & LEADERBOARD -->
+      <section id="view-import" class="view">
+        <h2>Import & Leaderboard</h2>
+
+        <button id="export-progress" class="primary">Export Progress</button>
+        <input type="file" id="import-progress" accept="application/json" />
+
+        <h3>Your Leaderboard</h3>
+        <table id="leaderboard-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Timestamp</th>
+              <th>Completed</th>
+              <th>Best %</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <!-- LAUNCH -->
+      <section id="view-launch" class="view">
+        <h2>Launch Level</h2>
+        <p id="selected-level-info">No level selected.</p>
+        <button id="play-btn" class="primary" disabled>Play</button>
+        <canvas id="game-canvas" width="800" height="300"></canvas>
+      </section>
+
+      <!-- STUDIO -->
+      <section id="view-studio" class="view">
+        <h2>Studio</h2>
+
+        <canvas id="studio-canvas" width="800" height="200"></canvas>
+
+        <div class="studio-controls">
+          <button id="tool-spike" class="primary">Spike Tool</button>
+          <button id="tool-erase">Erase Tool</button>
+          <button id="studio-clear">Clear</button>
+        </div>
+
+        <div class="studio-meta">
+          <label>Name <input id="studio-name" /></label>
+          <label>BG Color <input type="color" id="studio-bg" value="#020617" /></label>
+          <label>Ground Color <input type="color" id="studio-ground" value="#111827" /></label>
+          <label>Win Text <input id="studio-win" /></label>
+        </div>
+
+        <button id="studio-export" class="primary">Export Level JSON</button>
+        <input type="file" id="studio-import" accept="application/json" />
+        <button id="studio-save" class="primary">Save to Launcher</button>
+      </section>
+
+    </main>
+
+    <footer class="app-footer">
+      VANGUARD 2026 — Local Storage Powered
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
+	

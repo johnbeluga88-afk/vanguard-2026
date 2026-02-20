@@ -1,0 +1,5 @@
+services:
+  - type: web
+    name: vanguard-2026
+    env: static
+    staticPublishPath: /

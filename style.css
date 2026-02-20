@@ -1,0 +1,106 @@
+:root {
+  --bg: #020617;
+  --panel: #0f172a;
+  --accent: #38bdf8;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+}
+
+#app {
+  max-width: 1100px;
+  margin: 20px auto;
+  background: #0b1120;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #1e293b;
+}
+
+.app-header {
+  padding: 20px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.main-nav {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.nav-btn {
+  background: #1e293b;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.nav-btn.active {
+  background: var(--accent);
+  color: #000;
+}
+
+.app-main {
+  padding: 20px;
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.card {
+  background: var(--panel);
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 1px solid #1e293b;
+}
+
+.card.selected {
+  border-color: var(--accent);
+}
+
+.primary {
+  background: var(--accent);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #000;
+  margin-top: 10px;
+}
+
+#game-canvas,
+#studio-canvas {
+  background: #000;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+td, th {
+  border-bottom: 1px solid #1e293b;
+  padding: 6px;
+}
