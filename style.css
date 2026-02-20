@@ -8,7 +8,7 @@
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
   color: var(--text);
   font-family: system-ui, sans-serif;
 }
@@ -16,10 +16,11 @@ body {
 #app {
   max-width: 1100px;
   margin: 20px auto;
-  background: #0b1120;
+  background: #020617;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid #1e293b;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
 }
 
 .app-header {
@@ -27,24 +28,36 @@ body {
   border-bottom: 1px solid #1e293b;
 }
 
+.app-header h1 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
 .main-nav {
   display: flex;
   gap: 8px;
   margin-top: 10px;
+  flex-wrap: wrap;
 }
 
 .nav-btn {
-  background: #1e293b;
-  border: none;
+  background: #0b1120;
+  border: 1px solid #1e293b;
   padding: 8px 14px;
-  border-radius: 20px;
+  border-radius: 999px;
   color: var(--muted);
   cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .nav-btn.active {
   background: var(--accent);
-  color: #000;
+  color: #020617;
+  border-color: transparent;
 }
 
 .app-main {
@@ -59,10 +72,27 @@ body {
   display: block;
 }
 
+h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.hint {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
 .card-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 10px;
+}
+
+.card-list.small {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 }
 
 .card {
@@ -77,14 +107,36 @@ body {
   border-color: var(--accent);
 }
 
+.card-title {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.card-meta {
+  font-size: 11px;
+  color: var(--muted);
+}
+
 .primary {
   background: var(--accent);
   border: none;
-  padding: 10px 18px;
-  border-radius: 20px;
+  padding: 8px 16px;
+  border-radius: 999px;
   cursor: pointer;
-  color: #000;
-  margin-top: 10px;
+  color: #020617;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+button:not(.primary) {
+  background: #0b1120;
+  border: 1px solid #1e293b;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 11px;
 }
 
 #game-canvas,
@@ -98,9 +150,116 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 12px;
+  font-size: 12px;
 }
 
-td, th {
+td,
+th {
   border-bottom: 1px solid #1e293b;
   padding: 6px;
+  text-align: left;
+}
+
+.panel-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  padding: 12px;
+}
+
+.panel h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.garage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.app-footer {
+  padding: 10px 18px;
+  border-top: 1px solid #1e293b;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Studio */
+
+.studio-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.studio-mobile-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.studio-mobile-controls button {
+  flex: 1;
+}
+
+.studio-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.studio-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.studio-meta label {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+}
+
+.studio-meta input {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  background: #020617;
+  color: var(--text);
+}
+
+.studio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  #app {
+    margin: 10px;
+  }
+
+  .app-main {
+    padding: 14px;
+  }
+
+  #game-canvas,
+  #studio-canvas {
+    width: 100%;
+  }
 }
