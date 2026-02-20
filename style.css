@@ -92,7 +92,7 @@ h2 {
 }
 
 .card-list.small {
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
 }
 
 .card {
@@ -195,6 +195,21 @@ th {
   color: var(--muted);
 }
 
+/* Garage previews */
+
+.skin-swatch {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+
+.face-preview {
+  font-family: monospace;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
 /* Studio */
 
 .studio-wrapper {
@@ -262,4 +277,7 @@ th {
   #studio-canvas {
     width: 100%;
   }
+}
+  border-bottom: 1px solid #1e293b;
+  padding: 6px;
 }
