@@ -25,12 +25,14 @@
       <!-- LEVELS -->
       <section id="view-levels" class="view active">
         <h2>Levels</h2>
+        <p class="hint">Select a level to play. Custom levels appear here automatically.</p>
         <div id="levels-list" class="card-list"></div>
       </section>
 
       <!-- GARAGE -->
       <section id="view-garage" class="view">
         <h2>Garage</h2>
+        <p class="hint">Choose your icon and face. Saved in this browser.</p>
         <div class="garage-grid">
           <div>
             <h3>Icons</h3>
@@ -48,26 +50,39 @@
       <section id="view-import" class="view">
         <h2>Import & Leaderboard</h2>
 
-        <button id="export-progress" class="primary">Export Progress</button>
-        <input type="file" id="import-progress" accept="application/json" />
+        <div class="panel-row">
+          <div class="panel">
+            <h3>Export Progress</h3>
+            <p class="hint">Download your current progress as JSON and also add a snapshot to the local leaderboard.</p>
+            <button id="export-progress" class="primary">Export Progress JSON</button>
+          </div>
+          <div class="panel">
+            <h3>Import Progress</h3>
+            <p class="hint">Import a JSON snapshot to add it to your leaderboard history.</p>
+            <input type="file" id="import-progress" accept="application/json" />
+          </div>
+        </div>
 
-        <h3>Your Leaderboard</h3>
-        <table id="leaderboard-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Timestamp</th>
-              <th>Completed</th>
-              <th>Best %</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="panel">
+          <h3>Your Leaderboard</h3>
+          <table id="leaderboard-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Timestamp</th>
+                <th>Completed</th>
+                <th>Best %</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </section>
 
       <!-- LAUNCH -->
       <section id="view-launch" class="view">
         <h2>Launch Level</h2>
+        <p class="hint">Select a level in LEVELS, then play it here.</p>
         <p id="selected-level-info">No level selected.</p>
         <button id="play-btn" class="primary" disabled>Play</button>
         <canvas id="game-canvas" width="800" height="300"></canvas>
@@ -76,25 +91,51 @@
       <!-- STUDIO -->
       <section id="view-studio" class="view">
         <h2>Studio</h2>
+        <p class="hint">
+          Geometry Dash–style editor: arrow keys move, +/- zoom, click/tap to place. On mobile, use the buttons.
+        </p>
 
-        <canvas id="studio-canvas" width="800" height="200"></canvas>
+        <div class="studio-wrapper">
+          <canvas id="studio-canvas" width="800" height="220"></canvas>
 
-        <div class="studio-controls">
-          <button id="tool-spike" class="primary">Spike Tool</button>
-          <button id="tool-erase">Erase Tool</button>
-          <button id="studio-clear">Clear</button>
+          <div class="studio-mobile-controls">
+            <button id="studio-left">◀</button>
+            <button id="studio-right">▶</button>
+            <button id="studio-zoom-out">−</button>
+            <button id="studio-zoom-in">+</button>
+          </div>
+
+          <div class="studio-toolbar">
+            <button id="tool-spike" class="primary">Spike Tool</button>
+            <button id="tool-erase">Erase Tool</button>
+            <button id="studio-clear">Clear</button>
+          </div>
+
+          <div class="studio-meta">
+            <label>
+              Name
+              <input id="studio-name" placeholder="My GD Level" />
+            </label>
+            <label>
+              BG Color
+              <input type="color" id="studio-bg" value="#020617" />
+            </label>
+            <label>
+              Ground Color
+              <input type="color" id="studio-ground" value="#111827" />
+            </label>
+            <label>
+              Win Text
+              <input id="studio-win" placeholder="GG!" />
+            </label>
+          </div>
+
+          <div class="studio-actions">
+            <button id="studio-export" class="primary">Export Level JSON</button>
+            <input type="file" id="studio-import" accept="application/json" />
+            <button id="studio-save" class="primary">Save to Launcher</button>
+          </div>
         </div>
-
-        <div class="studio-meta">
-          <label>Name <input id="studio-name" /></label>
-          <label>BG Color <input type="color" id="studio-bg" value="#020617" /></label>
-          <label>Ground Color <input type="color" id="studio-ground" value="#111827" /></label>
-          <label>Win Text <input id="studio-win" /></label>
-        </div>
-
-        <button id="studio-export" class="primary">Export Level JSON</button>
-        <input type="file" id="studio-import" accept="application/json" />
-        <button id="studio-save" class="primary">Save to Launcher</button>
       </section>
 
     </main>
