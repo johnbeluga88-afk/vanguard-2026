@@ -734,5 +734,3 @@ function buildStudioJSON(state) {
     },
   };
 }
-  };
-}
