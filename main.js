@@ -1,12 +1,4 @@
-/* ============================================================
-   VANGUARD 2026 — PRODUCTION BUILD
-   Geometry Dash–style launcher + studio + garage + leaderboard
-   Fully localStorage powered
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   STORAGE KEYS + DEFAULTS
------------------------------------------------------------- */
+/* VANGUARD 2026 — Geometry Dash–style launcher + studio */
 
 const STORAGE = {
   PROGRESS: "vanguard_progress",
@@ -27,10 +19,6 @@ const NUM_LEVELS = 30;
 const NUM_ICONS = 10;
 const NUM_FACES = 10;
 
-/* ------------------------------------------------------------
-   LOAD / SAVE HELPERS
------------------------------------------------------------- */
-
 function load(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
@@ -47,10 +35,6 @@ function save(key, value) {
 let progress = load(STORAGE.PROGRESS, DEFAULT_PROGRESS);
 let leaderboard = load(STORAGE.LEADERBOARD, []);
 let customLevels = load(STORAGE.CUSTOM, []);
-
-/* ------------------------------------------------------------
-   LEVEL GENERATION
------------------------------------------------------------- */
 
 let levels = [];
 
@@ -81,10 +65,6 @@ function rebuildLevels() {
   levels = [...generateBuiltinLevels(), ...customLevels];
 }
 
-/* ------------------------------------------------------------
-   INITIALIZATION
------------------------------------------------------------- */
-
 document.addEventListener("DOMContentLoaded", () => {
   rebuildLevels();
   initNavigation();
@@ -95,10 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initStudio();
 });
 
-/* ------------------------------------------------------------
-   NAVIGATION
------------------------------------------------------------- */
-
 function initNavigation() {
   const buttons = document.querySelectorAll(".nav-btn");
   const views = document.querySelectorAll(".view");
@@ -107,7 +83,6 @@ function initNavigation() {
     btn.addEventListener("click", () => {
       buttons.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-
       const id = btn.dataset.view;
       views.forEach((v) => v.classList.remove("active"));
       document.getElementById("view-" + id).classList.add("active");
@@ -120,10 +95,6 @@ function initNavigation() {
     if (progress.selectedLevel) startGame(progress.selectedLevel);
   };
 }
-
-/* ------------------------------------------------------------
-   LEVELS LIST
------------------------------------------------------------- */
 
 function renderLevels() {
   const container = document.getElementById("levels-list");
@@ -151,10 +122,6 @@ function renderLevels() {
     container.appendChild(card);
   });
 }
-
-/* ------------------------------------------------------------
-   GARAGE
------------------------------------------------------------- */
 
 function renderGarage() {
   const icons = document.getElementById("icon-list");
@@ -227,7 +194,7 @@ function drawGaragePreview() {
     ctx.lineTo(cx + 12, cy + 10);
   } else if (m === 1) {
     ctx.moveTo(cx - 12, cy + 8);
-    ctx.quadraticCurveTo(cx, cy + 16, cx + 12, cy + 8);
+    ctx.quadraticCurveTo(cx, cy + 16, cx + 8, cy + 8);
   } else {
     ctx.moveTo(cx - 12, cy + 12);
     ctx.quadraticCurveTo(cx, cy + 4, cx + 12, cy + 12);
@@ -235,10 +202,6 @@ function drawGaragePreview() {
 
   ctx.stroke();
 }
-
-/* ------------------------------------------------------------
-   LEADERBOARD
------------------------------------------------------------- */
 
 function renderLeaderboard() {
   const tbody = document.querySelector("#leaderboard-table tbody");
@@ -295,10 +258,6 @@ function importProgress(e) {
   reader.readAsText(file);
 }
 
-/* ------------------------------------------------------------
-   LAUNCHER INFO
------------------------------------------------------------- */
-
 function updateLaunchInfo() {
   const info = document.getElementById("selected-level-info");
   const btn = document.getElementById("play-btn");
@@ -320,10 +279,6 @@ function updateLaunchInfo() {
   info.textContent = `${lvl.name} • Best: ${best}%`;
   btn.disabled = false;
 }
-
-/* ------------------------------------------------------------
-   GAME ENGINE
------------------------------------------------------------- */
 
 function startGame(levelId) {
   const canvas = document.getElementById("game-canvas");
@@ -453,57 +408,151 @@ function startGame(levelId) {
   loop();
 }
 
-/* ------------------------------------------------------------
-   STUDIO
------------------------------------------------------------- */
+/* --------- STUDIO (upgraded, GD-style, mobile-friendly) --------- */
 
 function initStudio() {
   const canvas = document.getElementById("studio-canvas");
   const ctx = canvas.getContext("2d");
 
-  const cols = 60;
-  const cellW = canvas.width / cols;
-  const groundY = canvas.height - 40;
+  const cols = 200;
+  const cellWBase = 20;
+  const groundH = 40;
+  const groundY = canvas.height - groundH;
 
   const state = {
     tool: "spike",
     spikes: [],
+    cameraX: 0,
+    zoom: 1,
+    cursorCol: null,
   };
 
+  function worldToScreenX(col) {
+    const cellW = cellWBase * state.zoom;
+    return col * cellW - state.cameraX;
+  }
+
+  function screenToCol(x) {
+    const cellW = cellWBase * state.zoom;
+    return Math.max(0, Math.min(cols - 1, Math.floor((x + state.cameraX) / cellW)));
+  }
+
   function draw() {
-    ctx.fillStyle = document.getElementById("studio-bg").value;
+    const bg = document.getElementById("studio-bg").value || "#020617";
+    const ground = document.getElementById("studio-ground").value || "#111827";
+
+    ctx.fillStyle = bg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = document.getElementById("studio-ground").value;
-    ctx.fillRect(0, groundY, canvas.width, 40);
+    const cellW = cellWBase * state.zoom;
+    ctx.strokeStyle = "rgba(148,163,184,0.15)";
+    ctx.lineWidth = 1;
+    for (let col = 0; col <= cols; col++) {
+      const sx = worldToScreenX(col);
+      if (sx < -cellW || sx > canvas.width + cellW) continue;
+      ctx.beginPath();
+      ctx.moveTo(sx, 0);
+      ctx.lineTo(sx, canvas.height);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = ground;
+    ctx.fillRect(0, groundY, canvas.width, groundH);
 
     ctx.fillStyle = "#f97316";
     state.spikes.forEach((s) => {
-      const sx = s.x * cellW + cellW / 2;
+      const sx = worldToScreenX(s.x) + cellW / 2;
+      if (sx < -20 || sx > canvas.width + 20) return;
       ctx.beginPath();
-      ctx.moveTo(sx - 10, groundY);
-      ctx.lineTo(sx + 10, groundY);
-      ctx.lineTo(sx, groundY - 30);
+      ctx.moveTo(sx - cellW * 0.4, groundY);
+      ctx.lineTo(sx + cellW * 0.4, groundY);
+      ctx.lineTo(sx, groundY - 30 * state.zoom);
       ctx.closePath();
       ctx.fill();
     });
+
+    if (state.cursorCol !== null) {
+      const sx = worldToScreenX(state.cursorCol);
+      ctx.fillStyle = "rgba(56,189,248,0.25)";
+      ctx.fillRect(sx, 0, cellW, canvas.height - groundH);
+    }
   }
 
-  function cellFromX(x) {
-    return Math.max(0, Math.min(cols - 1, Math.floor(x / cellW)));
-  }
-
-  canvas.onclick = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const col = cellFromX(e.clientX - rect.left);
+  function placeOrErase(col) {
     const idx = state.spikes.findIndex((s) => s.x === col);
-
     if (state.tool === "spike") {
       if (idx === -1) state.spikes.push({ x: col });
     } else {
       if (idx !== -1) state.spikes.splice(idx, 1);
     }
+    draw();
+  }
 
+  function handlePointer(clientX) {
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const col = screenToCol(x);
+    state.cursorCol = col;
+    placeOrErase(col);
+  }
+
+  canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    state.cursorCol = screenToCol(x);
+    draw();
+  });
+
+  canvas.addEventListener("mousedown", (e) => {
+    handlePointer(e.clientX);
+  });
+
+  canvas.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    handlePointer(touch.clientX);
+  });
+
+  canvas.addEventListener("touchmove", (e) => {
+    const touch = e.touches[0];
+    handlePointer(touch.clientX);
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") {
+      state.cameraX = Math.min(
+        state.cameraX + 40,
+        cols * cellWBase * state.zoom - canvas.width
+      );
+      draw();
+    } else if (e.key === "ArrowLeft") {
+      state.cameraX = Math.max(state.cameraX - 40, 0);
+      draw();
+    } else if (e.key === "+" || e.key === "=") {
+      state.zoom = Math.min(2, state.zoom + 0.1);
+      draw();
+    } else if (e.key === "-" || e.key === "_") {
+      state.zoom = Math.max(0.5, state.zoom - 0.1);
+      draw();
+    }
+  });
+
+  document.getElementById("studio-left").onclick = () => {
+    state.cameraX = Math.max(state.cameraX - 40, 0);
+    draw();
+  };
+  document.getElementById("studio-right").onclick = () => {
+    state.cameraX = Math.min(
+      state.cameraX + 40,
+      cols * cellWBase * state.zoom - canvas.width
+    );
+    draw();
+  };
+  document.getElementById("studio-zoom-in").onclick = () => {
+    state.zoom = Math.min(2, state.zoom + 0.1);
+    draw();
+  };
+  document.getElementById("studio-zoom-out").onclick = () => {
+    state.zoom = Math.max(0.5, state.zoom - 0.1);
     draw();
   };
 
@@ -526,7 +575,7 @@ function initStudio() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = json.name.replace(/\s+/g, "-") + ".json";
+    a.download = (json.name || "custom-level").replace(/\s+/g, "-") + ".json";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -534,19 +583,22 @@ function initStudio() {
   document.getElementById("studio-import").onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = () => {
       try {
         const data = JSON.parse(reader.result);
-        document.getElementById("studio-name").value = data.name;
-        document.getElementById("studio-bg").value = data.data.bg;
-        document.getElementById("studio-ground").value = data.data.ground;
-        document.getElementById("studio-win").value = data.data.winText;
-        state.spikes = data.data.spikes.map((s) => ({ x: s.x }));
+        document.getElementById("studio-name").value = data.name || "";
+        document.getElementById("studio-bg").value = data.data.bg || "#020617";
+        document.getElementById("studio-ground").value =
+          data.data.ground || "#111827";
+        document.getElementById("studio-win").value =
+          data.data.winText || "GG!";
+        state.spikes = (data.data.spikes || []).map((s) => ({ x: s.x }));
+        state.cameraX = 0;
+        state.zoom = 1;
         draw();
       } catch {
-        alert("Invalid JSON.");
+        alert("Invalid level JSON.");
       }
     };
     reader.readAsText(file);
@@ -560,22 +612,27 @@ function initStudio() {
     save(STORAGE.CUSTOM, customLevels);
     rebuildLevels();
     renderLevels();
-    alert("Saved to launcher.");
+    alert("Level saved to launcher.");
   };
 
   draw();
 }
 
 function buildStudioJSON(state) {
+  const name = document.getElementById("studio-name").value.trim() || "Custom Level";
+  const bg = document.getElementById("studio-bg").value || "#020617";
+  const ground = document.getElementById("studio-ground").value || "#111827";
+  const winText = document.getElementById("studio-win").value.trim() || "GG!";
+
   return {
     id: "STUDIO",
-    name: document.getElementById("studio-name").value || "Custom Level",
+    name,
     difficulty: "Custom",
     type: "custom",
     data: {
-      bg: document.getElementById("studio-bg").value,
-      ground: document.getElementById("studio-ground").value,
-      winText: document.getElementById("studio-win").value || "GG!",
+      bg,
+      ground,
+      winText,
       spikes: state.spikes.map((s) => ({ x: s.x })),
     },
   };
